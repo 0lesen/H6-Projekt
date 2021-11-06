@@ -1,0 +1,6 @@
+name,vlanid,vswitch
+"SERVER_MGMT - 10.0.10.0/24","10","vSwitch0"
+"SERVER_ZONE1 - 10.0.20.0/24","20","vSwitch0"
+"SERVER_ZONE2 - 10.0.30.0/24","30","vSwitch0"
+"SERVER_DMZ - 10.0.40.0/24","40","vSwitch0"
+"IDK MAN - to fast 4 you","1000","vSwitch0"
