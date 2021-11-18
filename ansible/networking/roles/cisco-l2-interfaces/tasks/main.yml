@@ -1,0 +1,78 @@
+---    
+- name: Create ACCESS interfaces
+  ios_config:
+    lines:
+      - "switchport access vlan {{ item.untagged }}"
+      - "spanning-tree portfast edge"
+      - "spanning-tree bpduguard enable"
+    parents: "interface {{ item.name }}"
+  with_items: "{{ interfaces }}"
+  when: '"ACCESS" in item.config'
+
+- name: No shutdown ACCESS interfaces
+  ios_config:
+    lines:
+      - "no shutdown"
+    parents: 'interface {{ item.name }}'
+    match: strict
+  with_items:
+    - "{{ interfaces }}"
+  when: '"ACCESS" in item.config and "NOSHUTDOWN" in item.config'
+  changed_when: False
+
+
+- name: Shutdown UNUSED interfaces and assign dummy vlan
+  ios_config:
+    lines:
+      - "switchport access vlan {{ item.dummy_vlan }}"
+      - "shutdown"
+    parents: "interface {{ item.name }}"
+  with_items: "{{ interfaces }}"
+  when: '"SHUTDOWN" in item.config and item.dummy_vlan is defined'
+
+- name: Shutdown UNUSED interfaces
+  ios_config:
+    lines:
+      - "shutdown"
+    parents: "interface {{ item.name }}"
+  with_items: "{{ interfaces }}"
+  when: '"SHUTDOWN" in item.config'
+
+- name: Configure description on interfaces
+  ios_config:
+    lines:
+      - "description {{ item.description }}"
+    parents: "interface {{ item.name }}"
+  with_items: "{{ interfaces }}"
+  when: '"UPLINK" in item.config or "DOWNLINK" in item.config or "ACCESS" in item.config and item.type == "physical" and item.description is defined'
+
+- name: Configure encapsulation on interfaces
+  ios_config:
+    lines:
+      - "switchport trunk encapsulation dot1q"
+    parents: "interface {{ item.name }}"
+  with_items: "{{ interfaces }}"
+  when: '"ENCAPSULATION" in item.config and switch_type == "MLSW"'
+
+- name: Configure vlans on TRUNK interfaces
+  ios_config:
+    lines:
+      - "switchport mode trunk"
+      - "switchport trunk allowed vlan {{ item.tagged }}"
+    parents: "interface {{ item.name }}"
+  with_items:
+    - "{{interfaces}}"
+  when: '"DOWNLINK" in item.config or "UPLINK" in item.config and "LAG" not in item.config'
+
+- name: No shutdown TRUNK interfaces
+  ios_config:
+    lines:
+      - "no shutdown"
+    parents: 'interface {{ item.name }}'
+    match: strict
+  with_items:
+    - "{{ interfaces }}"
+  when: '"DOWNLINK" in item.config or "UPLINK" in item.config and "LAG" not in item.config'
+  changed_when: False
+
+

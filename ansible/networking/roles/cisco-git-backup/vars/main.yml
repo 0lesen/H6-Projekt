@@ -1,0 +1,2 @@
+git_network_backup_configs: "backup_configs"
+cur_date_time: "{{ lookup('pipe','date +%d-%m-%Y-%H-%M') }}"

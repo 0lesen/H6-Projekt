@@ -1,0 +1,10 @@
+---
+- name: Configure broadcast storm-contorl interfaces
+  ios_config:
+    lines:
+      - "storm-control broadcast level {{ item.storm_control.high }}.00 {{ item.storm_control.low }}.00"
+      - "storm-control action shutdown"
+    parents: "interface {{ item.name }}"
+  with_items: "{{ interfaces }}"
+  when: item.storm_control is defined
+

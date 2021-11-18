@@ -1,0 +1,4 @@
+---    
+- name: Configure DEN as timzone
+  ios_config:
+    lines: "clock timezone DEN 1 0"

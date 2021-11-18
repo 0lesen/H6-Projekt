@@ -1,0 +1,45 @@
+- name: Make sure wheel group exsists
+  become: true
+  group:
+    name: wheel
+    state: present
+
+- name: Allow wheel users to have pswd'less sudo
+  become: true
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: '^%wheel'
+    line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+      
+
+# create users -------------------------
+
+- name: Add user Mikkel Bank Olesen
+  become: true
+  user:
+    name: mbo
+    comment: Automate borring stuff
+    shell: /bin/bash
+    groups: wheel
+    append: yes
+    password: $6$f9jCGHLchWH5HXVe$BAsLGigYnmxlIMggxWYTsHY4ufhS0OqedW7LtU3zxJcj/MntfWQeYjhBshXXQqG/cxFbzFXlYWhZo2aE.5gkc/
+    state: present
+
+- name: Add Mikkel Bank Olesen pub key
+  become: true
+  authorized_key:
+    user: mbo
+    key: "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIPhmh2MM+o8YAzOoH2Yg00oj+sfS/uc0QE8FqT7y9xm6AAAABHNzaDo="
+    state: present
+
+- name: Add user Mikkel Leth
+  become: true
+  user:
+    name: mkl
+    comment: SQL master2000
+    shell: /bin/bash
+    groups: wheel
+    append: yes
+    password: $5$QNFEryGUvC9pMCB$KVaPqaNKRErP71Y6B2c2juEnrMUhSda5YouU2FOr390
+    state: present

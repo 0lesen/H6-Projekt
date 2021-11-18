@@ -1,0 +1,5 @@
+---
+- name: Enable service password-encryption
+  ios_config:
+    lines:
+      - "service password-encryption"

@@ -1,0 +1,7 @@
+ansible_host: 10.0.20.4
+ansible_hostname: netbox
+
+snmp:
+  community: sadbnhbhjd
+  location: AARHUS_TECH-RACK1
+  extend: ""

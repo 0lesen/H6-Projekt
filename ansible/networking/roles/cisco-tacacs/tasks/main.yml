@@ -1,0 +1,10 @@
+--- 
+- name: Configure TACACS+
+  ios_config:
+    lines:
+      - "aaa new-model"
+      - "aaa authentication login default group tacacs+ local"
+      - "tacacs-server host {{tacacs.server_ip}}"
+      - "tacacs-server key 7 {{tacacs.key_secret}}"
+#      - "aaa authentication enable default none"
+

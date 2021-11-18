@@ -1,0 +1,4 @@
+---    
+- name: Configure hostname
+  ios_config:
+    lines: hostname {{ inventory_hostname }}

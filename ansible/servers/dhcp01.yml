@@ -1,0 +1,34 @@
+---
+- name: dhcp01 playbook
+  hosts: DHCP01
+  become: true
+  roles:
+  - snmp
+ 
+  tasks:
+   - name: Install isc-dhcp-server 
+     apt: pkg=isc-dhcp-server state=present update_cache=yes 
+
+   - name: Enable service isc-dhcp-server
+     service:
+       name: isc-dhcp-server
+       enabled: yes
+
+   - name: Copy default file to server
+     copy: 
+      src: servers/dhcp01/files/isc-dhcp-server
+      dest: /etc/default/isc-dhcp-server
+
+   - name: Copy dhcp config file to server
+     copy: 
+      src: servers/dhcp01/files/dhcpd.conf
+      dest: /etc/dhcp/dhcpd.conf
+
+   - name: isc-dhcpd-server sanity check
+     shell: "dhcpd -t"
+     notify:
+        - restart isc-dhcp-server
+
+  handlers:
+     - name: restart isc-dhcp-server
+       service: name=isc-dhcp-server state=restarted

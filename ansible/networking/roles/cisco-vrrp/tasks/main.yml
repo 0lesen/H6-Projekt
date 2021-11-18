@@ -1,0 +1,32 @@
+---    
+- name: VRRP - Configure version
+  ios_config:
+    lines:
+      - "standby version {{ vrrp.version }}"
+    parents: "interface {{ item.name }}"
+  with_items: "{{ vrrp.interfaces }}"
+  when: 'vrrp.version is defined and vrrp.interfaces is defined'
+
+- name: VRRP - Configure virtual IP 
+  ios_config:
+    lines:
+      - "standby {{ item.group_nr }} ip {{ item.ip }}"
+    parents: "interface {{ item.name }}"
+  with_items: "{{ vrrp.interfaces }}"
+  when: 'vrrp.interfaces is defined and item.groups is defined and item.ip is defined'
+
+- name: VRRP - Configure priority 
+  ios_config:
+    lines:
+      - "standby {{ item.group_nr }} priority {{ item.priority }}"
+    parents: "interface {{ item.name }}"
+  with_items: "{{ vrrp.interfaces }}"
+  when: 'vrrp.interfaces is defined and item.groups is defined and item.priority is defined'
+
+- name: VRRP - Configure preempt 
+  ios_config:
+    lines:
+      - "standby {{ item.group_nr }} preempt"
+    parents: "interface {{ item.name }}"
+  with_items: "{{ vrrp.interfaces }}"
+  when: 'vrrp.interfaces is defined and item.groups is defined'
