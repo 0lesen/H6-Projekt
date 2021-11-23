@@ -7,14 +7,14 @@ param (
 )
 
 # Netbox variabler bruges til at lave API kald
-$api_base_url = "https://10.0.20.4/api"
+$api_base_url = "https://netbox.netupnu.dk/api"
 $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
-$headers.Add("Authorization", 'Token 7ec29c2b2011f8244ff8822d7ba1f9ee3c514f10')
+$headers.Add("Authorization", 'Token bbbf9087d591f7651da4b8f2ce0d13ad071927bc')
 $headers.Add("Content-Type", 'application/json')
 $headers.Add("Accept", 'application/json')
 
 # Statisk variabler 
-$cluster_name = "cluster01"
+$cluster_name = "c01"
 $vlanStatusActive = "active"
 $vlanStatusDeprecated = "deprecated"
 
@@ -34,11 +34,18 @@ $getClusterVlansDetails = (Invoke-RestMethod -SkipCertificateCheck -Uri $api_bas
 
 Function Create-Portgroups
 {
-    $VMHosts = Get-VMHost
+    if ($type -eq "standalone" ){
+        $VMHosts = Get-VMHost
+    }
+    elseif ($type -eq "cluster"){
+        $VMHosts = Get-cluster -Name $CL | Get-VMHost
+    }
     $vswitch = "vSwitch0"
 #    $getClusterVlansDetails = (Invoke-RestMethod -SkipCertificateCheck -Uri $api_base_url/ipam/vlans/?role=$($cluster_name) -Headers $headers).results
-    foreach ($VMHost in $VMHosts) 
+    foreach ($VMhost in $VMHosts) 
     {
+        Write-Host ""
+        Write-Host "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Doing host: $($VMhost) ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
         foreach ($vlan in $getClusterVlansDetails) 
         {
             $vlanPrefix = (Invoke-RestMethod -SkipCertificateCheck -Uri $api_base_url/ipam/prefixes/?vlan_id=$($vlan.id) -Headers $headers).results
@@ -48,24 +55,24 @@ Function Create-Portgroups
             {
                 Try
                 {
-                $CheckPortGroupNameExist = Get-VMHost -name "$($VMhost)" | Get-VirtualPortGroup -Name "$($vlan_data)" -ErrorAction Stop
+                $CheckPortGroupNameExist = Get-VMHost $VMhost | Get-VirtualPortGroup -Name "$($vlan_data)" -ErrorAction Stop
                 Write-Host "Skipping - portgroup: $($vlan_data) already exist on host: $($VMHost)" -ForegroundColor blue
                 }
                 Catch
                 {
-                $CreatePortGroup = Get-VMHost -name "$($VMhost)" | Get-VirtualSwitch -name "$($vswitch)" | New-VirtualPortGroup -name "$($vlan_data)" -VLanId "$($vlan_id)"
+                $CreatePortGroup = Get-VMHost $VMhost | Get-VirtualSwitch -name "$($vswitch)" | New-VirtualPortGroup -name "$($vlan_data)" -VLanId "$($vlan_id)"
                 Write-Host "Created portgroup: $($vlan_data) on host: $($VMHost)" -ForegroundColor green
                 }
             }
-            elseif ($vlan.status.value -eq $vlanStatusDeprecated)
+            if ($vlan.status.value -eq $vlanStatusDeprecated)
             {
                 Try
                 {
-                $CheckPortGroupNameExist = Get-VMHost -name "$($VMhost)" | Get-VirtualPortGroup -Name "$($vlan_data)" -ErrorAction Stop
+                $CheckPortGroupNameExist = Get-VMHost $VMhost | Get-VirtualPortGroup -Name "$($vlan_data)" -ErrorAction Stop
                     Try
                     {
-                    $DeletePortGroup = Get-VMHost | Get-VirtualPortGroup -Name "$($vlan_data)" | Remove-VirtualPortGroup -Confirm:$false -ErrorAction Stop
-                    Write-Host "Deleted portgroup: $($vlan_data) on host: $($VMHost)" -ForegroundColor yellow
+                    $DeletePortGroup = Get-VMHost $VMhost | Get-VirtualPortGroup -Name "$($vlan_data)" | Remove-VirtualPortGroup -Confirm:$false -ErrorAction Stop
+                    Write-Host "Deleted portgroup: $($vlan_data) on host: $($VMhost)" -ForegroundColor yellow
                     }
                     Catch
                     {
@@ -84,7 +91,6 @@ Function Create-Portgroups
 
 
 
-#if ($confirmation -eq "n")
 
 if ($type -eq "standalone")
 {
@@ -100,7 +106,6 @@ elseif ($type -eq "cluster")
     $StartConnection = Connect-VIServer -Server $ip -User $username -Password $password
     Write-Host "Connected to vCenter: $($ip)"
     $CL = Read-Host " Enter Cluster name: "
-    $VMHosts = Get-cluster "$CL | Get-VMHost"
     Create-Portgroups
 }
 else {

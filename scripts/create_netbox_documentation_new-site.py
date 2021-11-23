@@ -1,7 +1,5 @@
 import urllib3
 import pynetbox
-import json
-
 
 nb = pynetbox.api('https://10.0.20.4', token='7ec29c2b2011f8244ff8822d7ba1f9ee3c514f10')
 nb.http_session.verify = False
@@ -97,7 +95,7 @@ for vlan in site_vlans_data:
         "name": "vlan{}".format(vlan_id),
         "description": "{}-{}".format(new_site_full_name, vlan_name),
         "type": "virtual"
-    })
+})
 
 ### Opret gateway ip for nye vlan
 for vlan in site_vlans_data:
@@ -109,4 +107,4 @@ for vlan in site_vlans_data:
     create_vlan_gateway_ip= prefixes_in_new_vlan.available_ips.create({
             "assigned_object_type": "dcim.interface",
             "assigned_object_id": "{}".format(get_vlan_interface_id.id)
-        })
+})
