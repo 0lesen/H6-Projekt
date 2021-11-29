@@ -4,8 +4,7 @@
     lines:
       - "vlan {{ item.id }}"
   with_items: "{{ vlans }}"
-  when: 'vlans is defined and vlans and item.state == "ACTIVE"'
-  #  register: configure_vlan
+  when: 'vlans is defined and vlans and item.state == "Active"'
 
 - name: Configure VLAN Name
   ios_config:
@@ -13,4 +12,12 @@
       - "name {{ item.name }}"
     parents: "vlan {{ item.id}}"
   with_items: "{{ vlans }}"
-  when: 'vlans is defined and vlans and item.state == "ACTIVE"'
+  when: 'vlans is defined and vlans and item.state == "Active"'
+
+- name: Delete VLAN ID
+  ios_config:
+    lines:
+      - "no vlan {{ item.id }}"
+  with_items: "{{ vlans }}"
+  when: 'vlans is defined and vlans and item.state == "Deprecated"'
+ 

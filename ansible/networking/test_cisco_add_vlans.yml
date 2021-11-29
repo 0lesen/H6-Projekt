@@ -4,7 +4,8 @@
   gather_facts: no
 
   roles:
-    - cisco-vlans
-      #    - cisco-l2-interfaces
+    - test-get-netbox-data
+    - test-cisco-vlans
+    - test-cisco-l2-interfaces
       #    - cisco-interfaces_lag
       #    - cisco-storm-control

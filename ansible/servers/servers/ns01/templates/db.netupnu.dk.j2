@@ -1,0 +1,19 @@
+$TTL    86400
+@           IN      SOA     netupnu.dk. root.netupnu.dk. (
+                                  1         ; Serial
+                             604800         ; Refresh
+                              86400         ; Retry
+                            2419200         ; Expire
+                              86400 )       ; Negative Cache TTL
+; Static records START
+@           IN      NS      ns01.netupnu.dk.
+@           IN      A       10.0.20.254
+@           IN      AAAA    ::1
+vault       IN  A   13.69.77.200
+; Static records END
+
+; Automated records from netbox START
+{% for ip_address in dns_names.json.results %}
+{{ ip_address.dns_name }}  IN A {{ ip_address.display | regex_replace('[/][^/]*$', '') }}
+{% endfor %}
+; Automated records from netbox END

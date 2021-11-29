@@ -1,0 +1,82 @@
+---
+- name: ns01 playbook
+  hosts: ns01.netupnu.dk
+  become: true
+  #  roles:
+      #  - netupnu-default
+ 
+  vars:
+    netbox_token: bbbf9087d591f7651da4b8f2ce0d13ad071927bc 
+    netbox_url: https://netbox.netupnu.dk
+    netbox_headers:
+      Authorization: "token {{ netbox_token }}"
+      Content-Type: "application/json"
+
+  tasks:
+    - name: "Get all ip addresses with a dns name" 
+      become: false
+      uri:
+        url: "https://netbox.netupnu.dk/api/ipam/ip-addresses/?dns_name__empty=false"
+        headers: "{{ netbox_headers }}"
+        status_code: 200
+        validate_certs: no
+        force: yes
+        method: GET
+      register: dns_names
+      delegate_to: localhost
+  
+    - name: Copy bind zone configuration
+      template:
+        src: servers/ns01/templates/db.netupnu.dk.j2
+        dest: /etc/bind/zones/db.netupnu.dk
+        owner: root
+        group: bind
+
+    - name: Install bind9 
+      apt: pkg=bind9 state=present update_cache=yes 
+
+    - name: Install dnsutils 
+      apt: pkg=dnsutils state=present update_cache=yes 
+
+    - name: Enable bind9 service 
+      service:
+        name: bind9 
+        enabled: yes
+
+    - name: Copy named.conf file to server
+      copy: 
+        src: servers/ns01/files/named.conf
+        dest: /etc/bind/named.conf
+        owner: root
+        group: bind
+
+    - name: Copy named.conf.local file to server
+      copy: 
+        src: servers/ns01/files/named.conf.local
+        dest: /etc/bind/named.conf.local
+        owner: root
+        group: bind
+
+    - name: Copy named.conf.options file to server
+      copy: 
+        src: servers/ns01/files/named.conf.options
+        dest: /etc/bind/named.conf.options
+        owner: root
+        group: bind
+
+    - name: Create directory zones if it does not exist
+      file:
+        path: /etc/bind/zones
+        state: directory
+        mode: '0755'
+        owner: root
+        group: bind
+
+        #    - name: bind9 sanity check
+        #      shell: "dhcpd -t"
+        #      notify:
+        #        - restart bind9
+
+  handlers:
+     - name: restart bind9
+       service: name=bind9 state=restarted

@@ -1,0 +1,56 @@
+---
+- name: Hent datacenter switche information
+  connection: local
+  hosts: localhost
+  #  collections:
+  #    - netbox.netbox
+  gather_facts: false
+
+  vars:
+    netbox_token: bbbf9087d591f7651da4b8f2ce0d13ad071927bc 
+    netbox_url: https://netbox.netupnu.dk
+    netbox_headers:
+      Authorization: "token {{ netbox_token }}"
+      Content-Type: "application/json"
+    device_name_list: []
+
+  tasks:
+    - name: get interfaces 
+      uri:
+        url: "https://netbox.netupnu.dk/api/dcim/interfaces/?device_id=1"
+        headers: "{{ netbox_headers }}"
+        status_code: 200
+        validate_certs: no
+        force: yes
+        method: GET
+      register: interfaces
+
+    - name: Print interfaces
+      debug:
+        msg: "{{interfaces.msg.results}}"
+
+      #    - name: Retrieve devices for the given site
+      #      uri:
+      #        url: "{{ nb_url }}/api/dcim/devices/?site_id={{ store_site.json.results[0].id }}"
+      #        headers: "{{ nb_headers }}"
+      #        method: GET
+      #        status_code: 200
+      #      register: store_devices
+      #
+      #    - name: Extract device-names to list
+      #      set_fact:
+      #        device_name_list: "{{ device_name_list + [ item.name ] }}"
+      #      loop: "{{ store_devices.json.results }}"
+      #      loop_control:
+      #        label: "{{ item.name }}"
+      #
+      #    - name: Retrieve Interface-IP informations
+      #      uri:
+      #        url: "{{ nb_url }}/api/ipam/ip-addresses/?device={{ item }}"
+      #        headers: "{{ nb_headers }}"
+      #        method: GET
+      #        status_code: 200
+      #      loop: "{{ device_name_list }}"
+      #      loop_control:
+      #        label: "{{ item }}"
+      #      register: devices_int_ips

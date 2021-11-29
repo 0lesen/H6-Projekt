@@ -1,0 +1,12 @@
+---
+- hosts: 
+    - platofrms_fortios
+  collections:
+    - fortinet.fortios
+  connection: httpapi
+
+
+
+
+
+

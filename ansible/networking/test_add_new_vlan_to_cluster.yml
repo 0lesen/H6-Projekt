@@ -1,0 +1,5 @@
+---    
+- hosts: localhost
+
+  roles:
+      - test-add-new-vlan-to-cluster

@@ -1,7 +1,8 @@
 import urllib3
 import pynetbox
 
-nb = pynetbox.api('https://10.0.20.4', token='7ec29c2b2011f8244ff8822d7ba1f9ee3c514f10')
+#nb = pynetbox.api('https://10.0.20.4', token='7ec29c2b2011f8244ff8822d7ba1f9ee3c514f10')
+nb = pynetbox.api('https://netbox.netupnu.dk', token='bbbf9087d591f7651da4b8f2ce0d13ad071927bc')
 nb.http_session.verify = False
 urllib3.disable_warnings()
 
@@ -11,8 +12,8 @@ new_site_id_input = int(input("Site ID: "))
 new_site_full_name = str(new_site_name_input).upper() + "-" + str(new_site_id_input)
 
 ### Statiske variabler
-new_site_tag = "site"
-new_site_prefixes_tag = "site-prefixes"
+new_site_tag = "SITE"
+new_site_prefixes_tag = "SITE-PREFIXES"
 ##new_site_prefix_length = 21
 site_vlans_data = [
         {"name": "MGMT", "id": 10, "prefix": 24},
@@ -54,57 +55,57 @@ for vlan in site_vlans_data:
         "site": "{}".format(create_new_site.id)
 })
 
-
-### Opret nyt site ledigt prefix
-site_prefixes = nb.ipam.prefixes.get(tag=new_site_prefixes_tag)
-create_new_prefix = site_prefixes.available_prefixes.create({
-            "prefix_length": 21,
-            "site": "{}".format(create_new_site.id)
-})
-
-### Opret prefixes for nye vlan
-for vlan in site_vlans_data:
-    vlan_id = vlan["id"]
-    vlan_name = vlan["name"]
-    vlan_prefix = vlan["prefix"]
-    prefixes_in_new_site = nb.ipam.prefixes.get(prefix=create_new_prefix)
-    create_new_vlan_prefix = prefixes_in_new_site.available_prefixes.create({
-        "prefix_length": 24,
-        "site": "{}".format(create_new_site.id),
-        "vlan":
-        {
-            "name": "{}-{}".format(new_site_full_name, vlan_name)
-        }
-})
-
-### Opret lag 3 switch på sitet
-create_new_device = nb.dcim.devices.create({
-    "name": "{}-MSW01".format(new_site_full_name),
-    "device_type": "{}".format(new_site_switch_type_id),
-    "device_role": "{}".format(new_site_switch_role_id),
-    "platform": "{}".format(new_site_switch_platform_id),
-    "site": "{}".format(create_new_site.id)
-})
-
-## Opret vlan interfaces på switchen 
-for vlan in site_vlans_data:
-    vlan_id = vlan["id"]
-    vlan_name = vlan["name"]
-    create_new_interfaces = nb.dcim.interfaces.create({
-        "device": "{}".format(create_new_device.id),
-        "name": "vlan{}".format(vlan_id),
-        "description": "{}-{}".format(new_site_full_name, vlan_name),
-        "type": "virtual"
-})
-
-### Opret gateway ip for nye vlan
-for vlan in site_vlans_data:
-    vlan_id = vlan["id"]
-    vlan_name = vlan["name"]
-    vlan_interface_name = "vlan" + str(vlan["id"])
-    prefixes_in_new_vlan = nb.ipam.prefixes.get(site=new_site_full_name.lower(), vlan_vid=vlan_id)
-    get_vlan_interface_id = nb.dcim.interfaces.get(site=new_site_full_name.lower(), device=create_new_device.name, name=vlan_interface_name)
-    create_vlan_gateway_ip= prefixes_in_new_vlan.available_ips.create({
-            "assigned_object_type": "dcim.interface",
-            "assigned_object_id": "{}".format(get_vlan_interface_id.id)
-})
+#
+#### Opret nyt site ledigt prefix
+#site_prefixes = nb.ipam.prefixes.get(tag=new_site_prefixes_tag)
+#create_new_prefix = site_prefixes.available_prefixes.create({
+#            "prefix_length": 21,
+#            "site": "{}".format(create_new_site.id)
+#})
+#
+#### Opret prefixes for nye vlan
+#for vlan in site_vlans_data:
+#    vlan_id = vlan["id"]
+#    vlan_name = vlan["name"]
+#    vlan_prefix = vlan["prefix"]
+#    prefixes_in_new_site = nb.ipam.prefixes.get(prefix=create_new_prefix)
+#    create_new_vlan_prefix = prefixes_in_new_site.available_prefixes.create({
+#        "prefix_length": 24,
+#        "site": "{}".format(create_new_site.id),
+#        "vlan":
+#        {
+#            "name": "{}-{}".format(new_site_full_name, vlan_name)
+#        }
+#})
+#
+#### Opret lag 3 switch på sitet
+#create_new_device = nb.dcim.devices.create({
+#    "name": "{}-MSW01".format(new_site_full_name),
+#    "device_type": "{}".format(new_site_switch_type_id),
+#    "device_role": "{}".format(new_site_switch_role_id),
+#    "platform": "{}".format(new_site_switch_platform_id),
+#    "site": "{}".format(create_new_site.id)
+#})
+#
+### Opret vlan interfaces på switchen 
+#for vlan in site_vlans_data:
+#    vlan_id = vlan["id"]
+#    vlan_name = vlan["name"]
+#    create_new_interfaces = nb.dcim.interfaces.create({
+#        "device": "{}".format(create_new_device.id),
+#        "name": "vlan{}".format(vlan_id),
+#        "description": "{}-{}".format(new_site_full_name, vlan_name),
+#        "type": "virtual"
+#})
+#
+#### Opret gateway ip for nye vlan
+#for vlan in site_vlans_data:
+#    vlan_id = vlan["id"]
+#    vlan_name = vlan["name"]
+#    vlan_interface_name = "vlan" + str(vlan["id"])
+#    prefixes_in_new_vlan = nb.ipam.prefixes.get(site=new_site_full_name.lower(), vlan_vid=vlan_id)
+#    get_vlan_interface_id = nb.dcim.interfaces.get(site=new_site_full_name.lower(), device=create_new_device.name, name=vlan_interface_name)
+#    create_vlan_gateway_ip= prefixes_in_new_vlan.available_ips.create({
+#            "assigned_object_type": "dcim.interface",
+#            "assigned_object_id": "{}".format(get_vlan_interface_id.id)
+#})

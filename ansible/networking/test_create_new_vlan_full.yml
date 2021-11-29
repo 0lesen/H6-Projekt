@@ -1,0 +1,19 @@
+---
+- hosts: localhost
+
+  vars:
+    new_vlan_name: "MBOMBO"
+    new_vlan_subnet: "10.0.60.0"
+    new_vlan_gateway: "10.0.60.1"
+    new_vlan_prefix: "/24"
+
+- name: Creating new vlan in netbox
+  import_playbook: test_add_new_vlan_to_netbox.yml 
+
+  #- name: Creating vlan on vmware cluster
+  #  import_playbook: test_add_new_vlan_to_cluster.yml 
+
+
+  #
+  #- name: Create vlans on cluster switches
+  #  import_playbook: test_cisco_add_vlans.yml

@@ -1,0 +1,8 @@
+netbox_token: bbbf9087d591f7651da4b8f2ce0d13ad071927bc 
+netbox_url: https://netbox.netupnu.dk
+dc_vlans_group: "dc01-vlans"
+netbox_headers:
+  Authorization: "token {{ netbox_token }}"
+  Content-Type: "application/json"
+
+

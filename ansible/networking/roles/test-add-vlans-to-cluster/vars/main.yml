@@ -1,0 +1,4 @@
+type: "cluster"
+cluster: "vcenter01.netupnu.dk"
+username: "administrator@vsphere.local"
+password: "Datait2021!"

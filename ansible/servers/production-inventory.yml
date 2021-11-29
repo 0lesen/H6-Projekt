@@ -1,0 +1,25 @@
+---
+plugin: netbox.netbox.nb_inventory
+api_endpoint: https://netbox.netupnu.dk
+token: bbbf9087d591f7651da4b8f2ce0d13ad071927bc
+validate_certs: False
+config_context: False
+group_by:
+  - device_roles
+    #  - tags
+  - sites
+  - platforms
+
+# Only get devices in Staging/test setup for site AAR-9999
+#query_filters:
+#  - tag: 'auto_site'
+#
+
+# Filter out passive-devices as e.g. patch-panels and only get devices
+# with an IP-address
+device_query_filters:
+  - has_primary_ip: 'true'
+
+# Insert informations as Ansible-facts on hosts
+compose:
+  ansible_network_os: platform.slug
