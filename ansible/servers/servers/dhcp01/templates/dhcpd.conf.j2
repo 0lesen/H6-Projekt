@@ -1,0 +1,30 @@
+### Static variables
+default-lease-time 2160; # 6 hours
+max-lease-time 43200; # 12 hours
+
+### Static DHCP ranges START ###
+### Claim range
+subnet 10.0.20.0 netmask 255.255.255.0 {
+}
+### Example range
+#subnet 10.10.10.0 netmask 255.255.255.0 {
+#  range 10.10.10.50 10.10.10.100;
+#  option routers 10.10.10.1 ;
+#  option domain-name-servers 10.10.10.2 ;
+#  option broadcast-address 10.10.10.255;
+#}
+
+### Static DHCP ranges START ###
+
+
+### Automatic DHCP ranges from Netbox START ###
+{% for prefix in dhcp_prefixes %}
+# DHCP for VLAN {{ prefix.vlan.name }} - ID: {{ prefix.vlan.vid }}
+subnet {{ prefix.prefix | ipaddr('network') }} netmask {{ prefix.prefix | ipaddr('netmask') }} {
+  range {{ prefix.prefix | ipaddr('net') | ipaddr('20') | regex_replace('[/][^/]*$', '') }} {{ prefix.prefix | ipaddr('net') | ipaddr('254') | regex_replace('[/][^/]*$', '') }};
+  option routers {{ prefix.prefix | ipaddr('net') | ipaddr('1') | regex_replace('[/][^/]*$', '') }};
+  option domain-name-servers {{ dns_server }};
+  option broadcast-address {{ prefix.prefix | ipaddr('broadcast') }};
+}
+{% endfor %}
+### Automatic DHCP ranges from Netbox END ###

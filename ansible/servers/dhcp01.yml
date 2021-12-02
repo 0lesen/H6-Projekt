@@ -3,65 +3,57 @@
   hosts: dhcp01.netupnu.dk
   become: true
   roles:
-    - netupnu-default
+      #    - netupnu-default
  
   vars:
+    dns_server: "10.0.20.254"
+
     netbox_token: bbbf9087d591f7651da4b8f2ce0d13ad071927bc 
-    netbox_url: https://netbox.netupnu.dk
+    netbox_url: https://netbox01.netupnu.dk
     netbox_headers:
       Authorization: "token {{ netbox_token }}"
       Content-Type: "application/json"
 
   tasks:
-    - name: "Get all ip addresses with a dns name" 
+    - name: "Get all prefixes with dhcp tag" 
       become: false
       uri:
-        url: "https://netbox.netupnu.dk/api/ipam/ip-addresses/?dns_name__empty=false"
+        url: "{{ netbox_url }}/api/ipam/prefixes/?tag=dhcp&state=active"
         headers: "{{ netbox_headers }}"
         status_code: 200
         validate_certs: no
         force: yes
         method: GET
-      register: dns_names
+      register: prefixes_data
       delegate_to: localhost
- 
+    
+    - name: "Set returned prefixes data as fact"
+      set_fact:
+        dhcp_prefixes: "{{ prefixes_data.json.results }}"
 
-  tasks:
-   - name: Install isc-dhcp-server 
-     apt: pkg=isc-dhcp-server state=present update_cache=yes 
+    - name: Install isc-dhcp-server 
+      apt: pkg=isc-dhcp-server state=present update_cache=yes 
 
-   - name: Enable service isc-dhcp-server
-     service:
-       name: isc-dhcp-server
-       enabled: yes
+    - name: Enable service isc-dhcp-server
+      service:
+        name: isc-dhcp-server
+        enabled: yes
 
+    - name: Copy default file to server
+      copy: 
+       src: servers/dhcp01/files/isc-dhcp-server
+       dest: /etc/default/isc-dhcp-server
 
- 
-    - name: Copy bind zone configuration
+    - name: Generate dhcpd.conf and send to server
       template:
-        src: servers/ns01/templates/db.netupnu.dk.j2
-        dest: /etc/bind/zones/db.netupnu.dk
-        owner: root
-        group: bind
+        src: servers/dhcp01/templates/dhcpd.conf.j2
+        dest: /etc/dhcp/dhcpd.conf
 
-
-
-
-   - name: Copy default file to server
-     copy: 
-      src: servers/dhcp01/files/isc-dhcp-server
-      dest: /etc/default/isc-dhcp-server
-
-   - name: Copy dhcp config file to server
-     copy: 
-      src: servers/dhcp01/files/dhcpd.conf
-      dest: /etc/dhcp/dhcpd.conf
-
-   - name: isc-dhcpd-server sanity check
-     shell: "dhcpd -t"
-     notify:
-        - restart isc-dhcp-server
+    - name: isc-dhcpd-server sanity check
+      shell: "dhcpd -t"
+      notify:
+         - restart isc-dhcp-server
 
   handlers:
-     - name: restart isc-dhcp-server
-       service: name=isc-dhcp-server state=restarted
+    - name: restart isc-dhcp-server
+      service: name=isc-dhcp-server state=restarted

@@ -1,11 +1,7 @@
 ---    
-- name: "Run local pwsh script: create_portgroups_from_netbox.ps1"
-  shell: "./roles/test-add-new-vlan-to-cluster/files/create_new_portgroup.ps1 -type {{type}} -ip {{cluster}} -user {{username}} -password {{password}}" 
+- name: "Run local python script: create_new_vlan_documentation.py"
+  shell: '''create_new_vlan_documentation.py -name {{ new_vlan_name }} -id {{ new_vlan_id }} -subnet {{ new_vlan_subnet }} -prefix {{ new_vlan_prefix }}'''
   args:
-    executable: /usr/bin/pwsh
+    chdir: "roles/test-add-new-vlan-to-netbox/files"
+    executable: /usr/bin/python3
   delegate_to: localhost
-  register: script_status
-
-- name: "Print script_status"
-  debug:
-    msg: "{{script_status.stdout_lines}}"
