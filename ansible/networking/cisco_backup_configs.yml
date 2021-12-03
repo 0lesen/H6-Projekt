@@ -48,7 +48,7 @@
       delegate_to: localhost
 
     - name: Git - Push config files
-      shell: "git push {{git_network_backup_configs}}/*" 
+      shell: "git push" 
       #args:
       #  chdir: "{{git_network_backup_configs}}"
       register: gitpush
