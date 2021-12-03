@@ -14,9 +14,9 @@
   with_items: "{{ vlans.json.results }}"
   when: 'vlans is defined and vlans and item.status.value == "active"'
 
-- name: Delete VLAN ID
-  ios_config:
-    lines:
-      - "no vlan {{ item.vid }}"
-  with_items: "{{ vlans.json.results }}"
-  when: 'vlans is defined and vlans and item.status.value == "deprecated"'
+  #- name: Delete VLAN ID
+  #  ios_config:
+  #    lines:
+  #      - "no vlan {{ item.vid }}"
+  #  with_items: "{{ vlans.json.results }}"
+  #  when: 'vlans is defined and vlans and item.status.value == "deprecated"'

@@ -1,9 +1,0 @@
---- 
-- name: Configure switch stacking
-  ios_config:
-    lines:
-      - "switch {{ item.switch_id }} priority {{ item.switch_priority }}"
-      - ""
-  with_items: "{{ stacking }}"
-  when: "stacking is defined"
- #and item.slot_id is defined and item.priority is defined"

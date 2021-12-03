@@ -1,9 +1,0 @@
----
-- name: Configure secure NTP
-  ios_config:
-    lines:
-      - "clock timezone DEN 1 0"
-      - "ntp authentication-key {{ntp.key_id}} {{ntp.key_type}} {{ntp.key_secret}}"
-      - "ntp trusted-key {{ntp.key_id}}"
-      - "ntp server {{ntp.server_ip}} key {{ntp.key_id}}"
-      - "ntp authenticate"

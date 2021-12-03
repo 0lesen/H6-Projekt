@@ -3,7 +3,7 @@
     - platforms_ios
   gather_facts: no
   vars:
-          # git_network_backup_configs: "/home/ansible/code/network_backup_configs"
+      #git_network_backup_configs: "/home/ansible/code/network_backup_configs"
     git_network_backup_configs: "./backup_configs"
     cur_date_time: "{{ lookup('pipe','date +%d-%m-%Y-%H-%M') }}"
 
@@ -13,52 +13,52 @@
       ios_config:
         backup: yes
         backup_options:
-          filename: "{{inventory_hostname}}-{{cur_date_time}}.cfg"
+          filename: "{{inventory_hostname}}.cfg"
           dir_path: "{{git_network_backup_configs}}/"
       register: config
       when: ansible_network_os == "ios"
 
-      #    - name: Git - Satatus
-      #      shell: git status .
-      #      args:
-      #        chdir: "{{git_network_backup_configs}}"
-      #      register: gitstatus
-      #      when: config is defined
-      #      run_once: true
-      #      delegate_to: localhost
-      #      changed_when: False
-      #
-      #    - name: Git - Add config files 
-      #      shell: git add *
-      #      args:
-      #        chdir: "{{git_network_backup_configs}}"
-      #      register: gitadd
-      #      #when: '"Untracked" in gitstatus.stdout'
-      #      when: '".cfg" in gitstatus.stdout'
-      #      run_once: true
-      #      delegate_to: localhost
-      #
-      #    - name: Git - Commit changed config file 
-      #      shell: git commit * -m "Ansible Automatic Backup - {{cur_date_time}}" 
-      #      args:
-      #        chdir: "{{git_network_backup_configs}}"
-      #      register: gitcommit
-      #      when: gitadd.changed
-      #      run_once: true
-      #      delegate_to: localhost
-      #
-      #    - name: Git - Push config files
-      #      shell: git push 
-      #      args:
-      #        chdir: "{{git_network_backup_configs}}"
-      #      register: gitpush
-      #      when: gitcommit.changed
-      #      run_once: true
-      #      delegate_to: localhost
-      #
-      #    - name: Git - Watch config diff on github
-      #      debug:
-      #        msg: "https://github.com/0lesen/H5-Projekt/commits/main/ansible/networking/backup_configs"
-      #      when: gitpush.changed
-      #      run_once: true
-      #      delegate_to: localhost
+    - name: Git - Satatus
+      shell: "git status {{git_network_backup_configs}}/*"
+      #args:
+      #  chdir: "{{git_network_backup_configs}}"
+      register: gitstatus
+      when: config is defined
+      run_once: true
+      delegate_to: localhost
+      changed_when: False
+
+    - name: Git - Add config files 
+      shell: "git add {{git_network_backup_configs}}/*"
+      #args:
+      #  chdir: "{{git_network_backup_configs}}"
+      register: gitadd
+      when: '"Untracked" in gitstatus.stdout'
+      #when: '".cfg" in gitstatus.stdout'
+      run_once: true
+      delegate_to: localhost
+
+    - name: Git - Commit changed config file 
+      shell: 'git commit {{git_network_backup_configs}}/* -m "Ansible Automatic Backup - {{cur_date_time}}"' 
+      #args:
+      #  chdir: "{{git_network_backup_configs}}"
+      register: gitcommit
+      when: gitadd.changed
+      run_once: true
+      delegate_to: localhost
+
+    - name: Git - Push config files
+      shell: "git push {{git_network_backup_configs}}/*" 
+      #args:
+      #  chdir: "{{git_network_backup_configs}}"
+      register: gitpush
+      when: gitcommit.changed
+      run_once: true
+      delegate_to: localhost
+
+    - name: Git - Watch config diff on github
+      debug:
+        msg: "https://github.com/0lesen/H5-Projekt/commits/main/ansible/networking/backup_configs"
+      when: gitpush.changed
+      run_once: true
+      delegate_to: localhost

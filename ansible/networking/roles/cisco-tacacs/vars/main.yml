@@ -1,4 +1,0 @@
-tacacs:
-  key_secret: '04480E051D2458450C00' #key=secretkey
-  #  server_ip: '10.10.200.100'
-  server_ip: '10.10.99.100'

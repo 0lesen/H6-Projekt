@@ -1,6 +1,6 @@
 ---
 plugin: netbox.netbox.nb_inventory
-api_endpoint: https://netbox.netupnu.dk
+api_endpoint: https://netbox01.netupnu.dk
 token: bbbf9087d591f7651da4b8f2ce0d13ad071927bc
 validate_certs: False
 config_context: False
@@ -22,4 +22,5 @@ device_query_filters:
 
 # Insert informations as Ansible-facts on hosts
 compose:
+  device_site: sites
   ansible_network_os: platform.slug

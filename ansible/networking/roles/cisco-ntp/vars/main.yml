@@ -1,5 +1,0 @@
-ntp:
-  key_secret: 'secretkey'
-  key_type: 'md5'
-  key_id: '1'
-  server_ip: '10.10.110.7'

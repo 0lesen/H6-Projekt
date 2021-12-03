@@ -1,7 +1,10 @@
 ---
 - hosts: 
-    - platforms_ios
+  #    - platforms_ios
+    - sites_aar-s01
   gather_facts: no
+  vars:
+     site_name: "aar-s01" 
 
   roles:
     - test-get-netbox-data

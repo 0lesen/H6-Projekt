@@ -1,0 +1,12 @@
+---
+#- hosts: platforms_ios
+- hosts: DC01-CRT01
+  gather_facts: false
+
+  roles:
+    - test-get-netbox-data
+      #    - test-cisco-vlans
+    - test-cisco-l3-interfaces
+      #- test-cisco-l2-interfaces
+      #    - cisco-interfaces_lag
+      #    - cisco-storm-control

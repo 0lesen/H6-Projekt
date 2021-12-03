@@ -1,15 +1,15 @@
 ---    
-##- name: Create ACCESS interfaces
-##  ios_config:
-##    lines:
-##      - "switchport mode access"
-##      - "switchport access vlan {{ item.untagged_vlan.vid }}"
-##        #- "spanning-tree portfast edge"
-##      - "spanning-tree portfast"
-##      - "spanning-tree bpduguard enable"
-##    parents: "interface {{ item.name }}"
-##  with_items: "{{ interfaces.json.results }}"
-##  when: 'item.mode and item.mode.value == "access" and item.untagged_vlan != "null"'
+- name: Create ACCESS interfaces
+  ios_config:
+    lines:
+      - "switchport mode access"
+      - "switchport access vlan {{ item.untagged_vlan.vid }}"
+        #- "spanning-tree portfast edge"
+      - "spanning-tree portfast"
+      - "spanning-tree bpduguard enable"
+    parents: "interface {{ item.name }}"
+  with_items: "{{ interfaces.json.results }}"
+  when: 'item.mode and item.mode.value == "access" and item.untagged_vlan != "null"'
 
   #- name: No shutdown ACCESS interfaces
   #  ios_config:

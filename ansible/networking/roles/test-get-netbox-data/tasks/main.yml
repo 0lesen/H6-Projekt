@@ -1,7 +1,7 @@
 ---    
-- name: "Get interfaces in host: {{ansible_hostname}}" 
+- name: "Get interfaces on host: {{inventory_hostname}}" 
   uri:
-    url: "https://netbox.netupnu.dk/api/dcim/interfaces/?device={{ansible_hostname}}&type__n=virtual"
+    url: "https://netbox01.netupnu.dk/api/dcim/interfaces/?device={{inventory_hostname}}"
     headers: "{{ netbox_headers }}"
     status_code: 200
     validate_certs: no
@@ -10,15 +10,21 @@
   register: interfaces
   delegate_to: localhost
 
-  #- name: Print interfaces
-  #  debug:
-  #    msg: "{{item}}"
-  #  loop: "{{interfaces.json.results}}"
-
-
-- name: "Get vlans in group {{dc_vlans_group}}" 
+- name: "Get IP address on host: {{inventory_hostname}}" 
   uri:
-    url: "https://netbox.netupnu.dk/api/ipam/vlans/?group={{dc_vlans_group}}"
+    url: "https://netbox01.netupnu.dk/api/ipam/ip-addresses/?device={{inventory_hostname}}"
+    headers: "{{ netbox_headers }}"
+    status_code: 200
+    validate_certs: no
+    force: yes
+    method: GET
+  register: ip_addresses
+  delegate_to: localhost
+
+
+- name: "Get vlans in group {{site_name}}-vlans" 
+  uri:
+    url: "https://netbox01.netupnu.dk/api/ipam/vlans/?group={{site_name}}-vlans"
     headers: "{{ netbox_headers }}"
     status_code: 200
     validate_certs: no
@@ -27,7 +33,14 @@
   register: vlans
   delegate_to: localhost
 
-  #- name: Print vlans
-  #  debug:
-  #    msg: "{{item}}"
-  #  loop: "{{vlans.json.results}}"
+  #- name: "Get vlans in group {{dc_vlans_group}}" 
+  #  uri:
+  #    url: "https://netbox01.netupnu.dk/api/ipam/vlans/?group={{dc_vlans_group}}"
+  #    headers: "{{ netbox_headers }}"
+  #    status_code: 200
+  #    validate_certs: no
+  #    force: yes
+  #    method: GET
+  #  register: vlans
+  #  delegate_to: localhost
+
