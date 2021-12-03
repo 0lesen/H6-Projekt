@@ -3,7 +3,7 @@
   hosts: dhcp01.netupnu.dk
   become: true
   roles:
-      #    - netupnu-default
+    - netupnu-default
  
   vars:
     dns_server: "10.0.20.254"
@@ -15,10 +15,10 @@
       Content-Type: "application/json"
 
   tasks:
-    - name: "Get all prefixes with dhcp tag" 
+    - name: "Get all prefixes with SITE-DHCP tag" 
       become: false
       uri:
-        url: "{{ netbox_url }}/api/ipam/prefixes/?tag=dhcp&state=active"
+        url: "{{ netbox_url }}/api/ipam/prefixes/?tag=site-dhcp&state=active"
         headers: "{{ netbox_headers }}"
         status_code: 200
         validate_certs: no
@@ -26,10 +26,13 @@
         method: GET
       register: prefixes_data
       delegate_to: localhost
-    
+   
     - name: "Set returned prefixes data as fact"
       set_fact:
         dhcp_prefixes: "{{ prefixes_data.json.results }}"
+
+    - name: apt-get install dhcpd-pools 
+      apt: pkg=dhcpd-pools state=present 
 
     - name: Install isc-dhcp-server 
       apt: pkg=isc-dhcp-server state=present update_cache=yes 

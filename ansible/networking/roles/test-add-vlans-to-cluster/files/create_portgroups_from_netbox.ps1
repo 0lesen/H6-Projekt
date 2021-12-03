@@ -7,7 +7,7 @@ param (
 )
 
 # Netbox variabler bruges til at lave API kald
-$api_base_url = "https://netbox.netupnu.dk/api"
+$api_base_url = "https://netbox01.netupnu.dk/api"
 $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
 $headers.Add("Authorization", 'Token bbbf9087d591f7651da4b8f2ce0d13ad071927bc')
 $headers.Add("Content-Type", 'application/json')
@@ -18,19 +18,7 @@ $CL= "c01"
 $vlanStatusActive = "active"
 $vlanStatusDeprecated = "deprecated"
 
-
 $getClusterVlansDetails = (Invoke-RestMethod -SkipCertificateCheck -Uri $api_base_url/ipam/vlans/?role=$($CL) -Headers $headers).results
-
-
-
-
-
-
-
-
-
-
-
 
 Function Create-Portgroups
 {
@@ -41,7 +29,6 @@ Function Create-Portgroups
         $VMHosts = Get-cluster -Name $CL | Get-VMHost
     }
     $vswitch = "vSwitch0"
-#    $getClusterVlansDetails = (Invoke-RestMethod -SkipCertificateCheck -Uri $api_base_url/ipam/vlans/?role=$($cluster_name) -Headers $headers).results
     foreach ($VMhost in $VMHosts) 
     {
         Write-Host ""
@@ -88,26 +75,18 @@ Function Create-Portgroups
 	}
     Disconnect-viserver -Server * -Confirm:$false
 }
-
-
-
-
 if ($type -eq "standalone")
 {
-    #$ES = Read-Host "Enter standalone ESXi ip: "
-
     $StartConnection = Connect-VIServer -Server $ip -User $username -Password $password
     Write-Host "Connected to host: $($ip)"
     Create-Portgroups
 } 
 elseif ($type -eq "cluster")
 { 
-    #$VC = Read-Host "Enter vCenter name: "
     $StartConnection = Connect-VIServer -Server $ip -User $username -Password $password
     Write-Host "Connected to vCenter: $($ip)"
-#    $CL = Read-Host " Enter Cluster name: "
     Create-Portgroups
 }
 else {
-     Write-Host "You fucked up"
+     Write-Host "ERROR - Cant connect to host"
 }

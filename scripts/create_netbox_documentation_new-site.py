@@ -16,6 +16,7 @@ new_site_full_name_slug = str(new_site_name_input).upper() + "_S" + str(new_site
 ### Statiske variabler
 dhcp_relay_tag = "DHCP-RELAY"
 ospf_tag = "OSPF"
+site_dhcp_tag = "SITE-DHCP"
 new_site_tag = "SITE"
 new_site_prefixes_tag = "site-prefixes"
 new_site_prefix_length = 21
@@ -88,7 +89,12 @@ for vlan in site_vlans_data:
         "vlan":
         {
             "name": "{}-{}".format(new_site_full_name, vlan_name)
+        },
+        "tags": [
+        {
+            "name": "{}".format(site_dhcp_tag)
         }
+
 })
 
 ### Opret switch på sitet

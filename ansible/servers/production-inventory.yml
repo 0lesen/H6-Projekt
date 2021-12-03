@@ -19,3 +19,4 @@ device_query_filters:
 # Insert informations as Ansible-facts on hosts
 compose:
   ansible_network_os: platform.slug
+  custom_fields: custom_fields
