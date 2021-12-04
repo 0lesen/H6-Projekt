@@ -1,8 +1,0 @@
----
-- hosts: localhost
-
-- name: Creating vlan on vmware cluster
-  import_playbook: test_add_vlan_to_cluster.yml 
-
-- name: Create vlans on cluster switches
-  import_playbook: test_cisco_add_vlans.yml

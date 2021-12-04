@@ -1,6 +1,5 @@
 ---
 - hosts: 
-  #    - platforms_ios
     - device_roles_dc-switch
   gather_facts: no
   vars:

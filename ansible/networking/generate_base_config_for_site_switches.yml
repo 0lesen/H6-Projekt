@@ -1,0 +1,25 @@
+---
+- hosts: 
+    - device_roles_site_switch
+  gather_facts: no
+
+  roles:
+    - test-get-netbox-data
+
+  tasks:
+    - name: Generating configuration template with data from Netbox
+      template:
+        src: ./sites-basic-config/base_sw_config_tempalte.j2
+        dest: "./sites-basic-config/{{ inventory_hostname }}.cfg"
+      delegate_to: localhost
+
+      #- name: Configure IP adress on vlan interfaces
+      #  ios_config:
+      #    lines: 
+      #      - "ip address {{ item.1.address | ipaddr('host/prefix') | ipaddr('address') }} {{ item.1.address | ipaddr('host/prefix') |ipaddr('netmask') }}"
+      #    parents: "interface {{ item.0.name }}"
+      #  with_nested:	
+      #    - "{{ interfaces.json.results }}"	
+      #    - "{{ ip_addresses.json.results }}"	
+      #  when: 'item.0.enabled and item.0.type.value == "virtual" and item.0.id == item.1.assigned_object_id'
+      # 

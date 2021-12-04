@@ -1,0 +1,11 @@
+### Denne playbook har til formål at konfigurer core routeren
+---
+- hosts:
+    - device_roles_core_router 
+  gather_facts: true
+
+  roles:
+    - test-get-netbox-data
+    - cisco-git-backup
+    - test-cisco-l3-interfaces
+    - cisco-git-backup

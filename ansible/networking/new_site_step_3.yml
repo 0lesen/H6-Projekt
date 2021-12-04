@@ -1,10 +1,13 @@
 ---
-- hosts: 
-  #    - platforms_ios
-    - sites_aar-s01
+- hosts:
+    - "sites_{{ new_site_name }}_s{{ new_site_id}}" 
+
+  vars_files:
+    - "./vars/new_site.yml"
+
   gather_facts: no
   vars:
-     site_name: "aar-s01" 
+      site_name: "{{ new_site_name }}_s{{ new_site_id }}" 
 
   roles:
     - cisco-git-backup

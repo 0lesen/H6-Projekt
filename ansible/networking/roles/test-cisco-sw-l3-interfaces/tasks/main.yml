@@ -43,6 +43,16 @@
     - "{{ ip_addresses.json.results }}"	
   when: 'item.0.enabled and item.0.type.value == "virtual" and item.0.id == item.1.assigned_object_id'
  
+- name: Configure default gateway
+  ios_config:
+    lines: 
+      - "ip ip default-gateway {{ item.1.address | ipaddr('net') | ipaddr('1') | regex_replace('[/][^/]*$', '') }}"
+  with_nested:	
+    - "{{ interfaces.json.results }}"	
+    - "{{ ip_addresses.json.results }}"	
+  when: 'item.0.enabled and item.0.type.value == "virtual" and item.0.id == item.1.assigned_object_id'
+ 
+
   #- name: Add ip helper to sub interfaces
   #  ios_config:
   #    lines:

@@ -32,6 +32,7 @@
     method: GET
   register: vlans
   delegate_to: localhost
+  when: "site_name is defined"
 
   #- name: "Get vlans in group {{dc_vlans_group}}" 
   #  uri:

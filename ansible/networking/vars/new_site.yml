@@ -1,0 +1,4 @@
+new_site_name: "aar"   # Forkortelse af by navn
+new_site_id: "01"      # Site ID 
+core_id: "8"           # Core ID hvor nyt site skal termineres
+interface_id: "107"    # Interface ID på valgt core, hvor nyt site skal forbindes

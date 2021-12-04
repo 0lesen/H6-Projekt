@@ -1,0 +1,35 @@
+configure terminal
+vtp mode transparent
+service password-encryption
+hostname {{ inventory_hostname }}
+username ansible privilege 15 password 0 Datait2021!
+no ip domain-lookup
+ip domain-name netupnu.dk
+crypto key generate rsa modulus 512
+ip ssh version 2
+line vty 0 4
+privilege level 15
+login local
+transport input ssh
+exit
+
+{% for ip_address in ip_addresses.json.results %}
+{% for interface in interfaces.json.results %}
+{% if interface.type.value == "virtual" and ip_address.assigned_object_id == interface.id %}
+vlan 1099
+name {{ inventory_hostname }}-MGMT1
+exit
+interface vlan {{ interface.name | regex_replace('[a-zA-Z]*', '') }}
+ip address {{ ip_address.address | regex_replace('[/][^/]*$', '')}} {{ ip_address.address | ipaddr('netmask')}}
+exit
+interface GigabitEthernet0/24
+switchport mode trunk
+switchport trunk allowed vlan {{ interface.name | regex_replace('[a-zA-Z]*', '') }}
+exit
+{% set netnetnet = ip_address.address | ipaddr('network') %}
+{% set netnet = netnetnet + '/' ~ ip_address.address | ipaddr('prefix') %}
+ip default-gateway {{ netnet | ipaddr('net') |ipaddr('1') | regex_replace('[/][^/]*$', '') }}
+{% endif %}
+{% endfor %}
+{% endfor %}
+copy running-config startup-config

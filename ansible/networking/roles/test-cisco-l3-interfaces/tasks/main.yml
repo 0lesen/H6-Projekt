@@ -1,36 +1,12 @@
 ---    
-#- name: Configure description on interfaces
-#  ios_config:
-#    lines:
-#      - "description {{ item.description }}"
-#    parents: "interface {{ item.name }}"
-#  with_items: "{{ interfaces }}"
-#  when: 'item.description is defined and "IF_IP" in item.config'
-#
-#- name: Enable l3 function on interfaces (Multi Layer Switch)
-#  ios_config:
-#    lines:
-#      - "no switchport"
-#    parents: "interface {{ item.name }}"
-#  with_items: "{{ interfaces }}"
-#  when: '"IF_IP" in item.config and switch_type == "MLSW" and item.type == "physical"'
-
-#- name: Configure IP adress on interfaces
-#  ios_config:
-#    lines:
-#      - "ip address {{ item.interface.ip }} {{ item.interface.mask }}"
-#    parents: "interface {{ item.name }}"
-#  with_items: "{{ interfaces }}"
-#  when: '"IF_IP" in item.config and item.interface is defined and item.interface.ip is defined and item.interface.mask is defined'
-
-#- name: N0 Shutdown interfaces
-#  ios_config:
-#    lines:
-#      - "no shutdown"
-#    parents: "interface {{ item.name }}"
-#  with_items: "{{ interfaces.json.results }}"
-#  when: 'item.enabled'
-#  changed_when: False
+- name: N0 Shutdown enabled interfaces
+  ios_config:
+    lines:
+      - "no shutdown"
+    parents: "interface {{ item.name }}"
+  with_items: "{{ interfaces.json.results }}"
+  when: 'item.enabled'
+  changed_when: False
 
 - name: Configure encapsulation on interfaces
   ios_config:
@@ -67,16 +43,3 @@
     parents: "interface {{ item.name }}"
   with_items: "{{ interfaces.json.results }}"
   when: 'item.enabled and item.type.value == "virtual"'
-
-
-
-
-  #- name: Shutdown UNUSED interfaces
-  #  ios_config:
-  #    lines:
-  #      - "shutdown"
-  #    parents: "interface {{ item.name }}"
-  #  with_items: "{{ interfaces }}"
-  #  when: '"SHUTDOWN" in item.config and "IF_IP" in item.config'
-
-
