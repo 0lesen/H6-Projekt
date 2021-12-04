@@ -1,0 +1,2 @@
+ansible_connection: httpapi
+ansible_network_os: fortios 

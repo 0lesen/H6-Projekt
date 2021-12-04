@@ -6,43 +6,26 @@
     access_token: "{{ api_token }}"
     system_interface:
       vdom:  "root"
-      name: "{{ item.name }}"
+      name: "{{ new_vlan_name }}"
       mode: "static"
       allowaccess: "ping"
       interface: "DATACENTER"
-      ip: "{{ network }}"
+      ip: "{{ new_vlan_gateway }}/{{ new_vlan_prefix }}"
       speed: "auto"
       status: "up"
+      role: "lan"
       type: "vlan"
       vlan_protocol: "8021q"
-      vlanid: "{{ item.vid }}"
-  with_items: "{{ vlans.json.results }}"
-  when: 'vlans is defined and vlans and item.status.value == "active"'
+      vlanid: "{{ new_vlan_id }}"
 
-
-
-
-
-
-  #
-  #- name: Configure VLAN ID
-  #  ios_config:
-  #    lines:
-  #      - "vlan {{ item.vid }}"
-  #  with_items: "{{ vlans.json.results }}"
-  #  when: 'vlans is defined and vlans and item.status.value == "active"'
-  #
-  #- name: Configure VLAN Name
-  #  ios_config:
-  #    lines:
-  #      - "name {{ item.name }}"
-  #    parents: "vlan {{ item.vid}}"
-  #  with_items: "{{ vlans.json.results }}"
-  #  when: 'vlans is defined and vlans and item.status.value == "active"'
-  #
-  #- name: Delete VLAN ID
-  #  ios_config:
-  #    lines:
-  #      - "no vlan {{ item.vid }}"
-  #  with_items: "{{ vlans.json.results }}"
-  #  when: 'vlans is defined and vlans and item.status.value == "deprecated"'
+- name: Create new vlan object subnet
+  fortios_firewall_address:
+    vdom:  "root"
+    state: "present"
+    access_token: "{{ api_token }}"
+    firewall_address:
+      name: "{{ new_vlan_name }} address"
+      type: "interface subnet"
+      interface: "{{ new_vlan_name }}"
+      subnet: "{{ new_vlan_subnet }}/ {{ new_vlan_prefix }}"
+  

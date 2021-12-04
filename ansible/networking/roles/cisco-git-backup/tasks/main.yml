@@ -5,44 +5,41 @@
     backup_options:
       filename: "{{inventory_hostname}}.cfg"
       dir_path: "{{git_network_backup_configs}}/"
-  register: saved_configuration
+  register: config
   when: ansible_network_os == "ios"
 
-- name: Git - Is it up-to-date?
-  delegate_to: localhost
+- name: Git - Satatus
+  shell: "git status {{git_network_backup_configs}}/*"
+  register: gitstatus
+  when: config is defined
   run_once: true
-  shell: "git status ."
-  args:
-    chdir: "{{git_network_backup_configs}}"
-  register: git
-  when: saved_configuration is defined
+  delegate_to: localhost
+  changed_when: False
 
-- name: Git - Add config file for devices
-  delegate_to: localhost
-  run_once: true
-  shell: "git add *"
-  args:
-    chdir: "{{git_network_backup_configs}}"
+- name: Git - Add config files 
+  shell: "git add {{git_network_backup_configs}}/*"
   register: gitadd
-  when: git is defined
-
-- debug:
-    msg: "{{ gitadd }}"
-
-- name: Git - Commit config file for devices
-  delegate_to: localhost
+  when: '"Untracked" in gitstatus.stdout or "modified" in gitstatus.stdout'
   run_once: true
-  shell: 'git commit * -m "Ansible Automatic Backup - {{cur_date_time}}"' 
-  args:
-    chdir: "{{git_network_backup_configs}}"
-  register: gitcommit
-  when: gitadd.changed == True
+  delegate_to: localhost
 
-    #- name: Git - Push config file for devices
-    #  delegate_to: localhost
-    #  shell: git push 
-    #  args:
-    #    chdir: "{{git_network_backup_configs}}"
-    #  register: gitpush
-    #  when: inventory_hostname in git.stdout
-    #
+- name: Git - Commit changed config file 
+  shell: 'git commit {{git_network_backup_configs}}/* -m "Ansible Automatic Backup - {{cur_date_time}}"' 
+  register: gitcommit
+  when: gitadd.changed
+  run_once: true
+  delegate_to: localhost
+
+- name: Git - Push config files
+  shell: "git push" 
+  register: gitpush
+  when: gitcommit.changed
+  run_once: true
+  delegate_to: localhost
+
+- name: Git - Watch config diff on github
+  debug:
+    msg: "https://github.com/0lesen/H6-Projekt/tree/master/ansible/networking/backup_configs"
+  when: gitpush.changed
+  run_once: true
+  delegate_to: localhost

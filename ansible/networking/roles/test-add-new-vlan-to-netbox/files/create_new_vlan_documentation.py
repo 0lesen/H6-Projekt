@@ -4,7 +4,7 @@ import pynetbox
 import argparse
 
 # Parser
-parser = argparse.ArgumentParser(description='Opret ny vlan i netbox')
+parser = argparse.ArgumentParser(description='Opret nyt DC vlan i netbox')
 
 # Argumenter
 parser.add_argument('-name', action='store', type=str, required=True, help='Navn på vlan')
@@ -15,7 +15,7 @@ parser.add_argument('-prefix', action='store', type=int, required=True, help='Su
 # Execute the parse_args() method
 args = parser.parse_args()
 
-nb = pynetbox.api('https://netbox.netupnu.dk', token='bbbf9087d591f7651da4b8f2ce0d13ad071927bc')
+nb = pynetbox.api('https://netbox01.netupnu.dk', token='bbbf9087d591f7651da4b8f2ce0d13ad071927bc')
 nb.http_session.verify = False
 urllib3.disable_warnings()
 
@@ -25,7 +25,7 @@ dc_site_name = "DC01"
 new_vlan_tag = "CREATE_NEW_CLUSTER_VLAN"
 dc_prefixes_tag = "DC-PREFIXES"
 dc_vlan_role = "C01"
-gateway_name = "FW01"
+gateway_name = "DC01-FW01"
 interface_downlink_tag = "DOWNLINK"
 interface_uplink_tag = "UPLINK"
 interface_esxi_tag = "ESXI"

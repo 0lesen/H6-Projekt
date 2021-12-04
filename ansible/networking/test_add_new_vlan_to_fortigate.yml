@@ -1,0 +1,12 @@
+---
+- hosts: 
+    - platforms_fortios
+  collections:
+    - fortinet.fortios
+  connection: httpapi
+
+  vars_files:
+    - ./vars/new_dc_vlan.yml
+
+  roles:
+    - test-fortigate-add-vlan

@@ -7,7 +7,7 @@ param (
 )
 
 # Netbox variabler bruges til at lave API kald
-$api_base_url = "https://netbox.netupnu.dk/api"
+$api_base_url = "https://netbox01.netupnu.dk/api"
 $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
 $headers.Add("Authorization", 'Token bbbf9087d591f7651da4b8f2ce0d13ad071927bc')
 $headers.Add("Content-Type", 'application/json')

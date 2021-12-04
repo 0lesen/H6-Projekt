@@ -93,7 +93,7 @@ for vlan in site_vlans_data:
         "tags": [
         {
             "name": "{}".format(site_dhcp_tag)
-        }
+        }]
 
 })
 
@@ -121,7 +121,7 @@ for vlan in site_vlans_data:
 })
 
 ### Tag vlans på uplink interface  
-print ("Tagger vlans på uplink interfacet: {}".format(new_site_switch_uplink_interface_name))
+print ("Opretter vlan tags på uplink interfacet: {}".format(new_site_switch_uplink_interface_name))
 for vlan in site_vlans_data:
     vlan_id = vlan["id"]
     vlan_name = vlan["name"]
@@ -131,7 +131,6 @@ for vlan in site_vlans_data:
     get_uplink_interface.save()
     get_uplink_interface.tagged_vlans.append(vlan_info.id)
     get_uplink_interface.save()
-
 
 ## Opret sub interfaces på coren 
 print ("Opretter subinterfaces på: {}".format(core_device_info.name))
@@ -150,26 +149,21 @@ for vlan in site_vlans_data:
         ]
 })
 
-
-
 ### Opret gateway ip for nye subinterfaces
 print ("Opretter gateway IP på subinterfaces")
 for vlan in site_vlans_data:
     vlan_id = vlan["id"]
     vlan_name = vlan["name"]
     sub_interface_name = "{}.{}".format(core_interface_info.name, vlan_id)
-    prefixes_in_new_vlan = nb.ipam.prefixes.get(site=new_site_full_name.lower(), vlan_vid=vlan_id)
+    prefixes_in_new_vlan = nb.ipam.prefixes.get(site=new_site_full_name_slug.lower(), vlan_vid=vlan_id)
     get_sub_interface_info = nb.dcim.interfaces.get(device_id=int(core_id), name=sub_interface_name)
     create_vlan_gateway_ip= prefixes_in_new_vlan.available_ips.create({
             "assigned_object_type": "dcim.interface",
             "assigned_object_id": get_sub_interface_info.id
 })
 
-
-### Opret OSPF tag på nye interfaces
-print ("Opretter OSPF tag på interfaces")
-#get_interface = nb.dcim.interfaces.get(id=core_interface_id)
-#get_interface.tags.append({"name": "{}".format(ospf_tag)})
+### Opret OSPF tag på nye sub interfaces
+print ("Opretter OSPF tag på sub interfaces")
 #get_interface.save()
 for vlan in site_vlans_data:
     vlan_id = vlan["id"]
@@ -179,22 +173,23 @@ for vlan in site_vlans_data:
     get_sub_interface.tags.append({"name": "{}".format(ospf_tag)})
     get_sub_interface.save()
 
-
 ### Opret management ip på mgmt vlan på ny switch
-print ("Opretter mgmt ip på mgmt vlan på switch: {}".format(create_new_device.name))
+#print ("Opretter mgmt ip på mgmt vlan på switch: {}".format(create_new_device.name))
 for vlan in site_vlans_data:
     if vlan["mgmt"] == True:
         vlan_id = vlan["id"]
         vlan_name = vlan["name"]
-        prefixes_in_new_vlan = nb.ipam.prefixes.get(site=new_site_full_name.lower(), vlan_vid=vlan_id)
-        create_vlan_gateway_ip= prefixes_in_new_vlan.available_ips.create({
+        prefixes_in_new_vlan = nb.ipam.prefixes.get(site=new_site_full_name_slug.lower(), vlan_vid=vlan_id)
+        create_vlan_ip= prefixes_in_new_vlan.available_ips.create({
             "assigned_object_type": "dcim.interface",
             "assigned_object_id": create_mgmt_interface.id
-})
-
+        })
+        get_device_info = nb.dcim.devices.get(id=create_new_device.id)
+        get_device_info.primary_ip4 = create_vlan_ip.id
+        get_device_info.save()
 
 ### Forbind kabel mellem core og site
-print("Forbinder kabel mellem {} og {}".format(core_device_info.name, create_new_device.name))
+print("Opretter kabel mellem {} og {}".format(core_device_info.name, create_new_device.name))
 get_new_site_switch_uplink_info = nb.dcim.interfaces.get(device_id=create_new_device.id, name=new_site_switch_uplink_interface_name)
 create_cable = nb.dcim.cables.create({
         "termination_a_type": "dcim.interface",
