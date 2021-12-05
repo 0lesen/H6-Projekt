@@ -4,6 +4,7 @@ api_endpoint: https://netbox01.netupnu.dk
 token: bbbf9087d591f7651da4b8f2ce0d13ad071927bc
 validate_certs: False
 config_context: False
+flatten_custom_fields: True
 group_by:
   - device_roles
     #  - tags

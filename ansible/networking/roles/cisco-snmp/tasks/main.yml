@@ -2,6 +2,6 @@
 - name: Configure SNMPv3
   ios_config:
     lines:
-      - "snmp-server group {{snmp.v3.group}} v3 priv"
-      - "snmp-server host {{snmp.server_ip}} version 3 auth {{snmp.v3.user}}"
-      - "snmp-server user {{snmp.v3.user}} {{snmp.v3.group}} v3 auth {{snmp.v3.auth}} {{snmp.v3.auth_key}} priv {{snmp.v3.priv}} {{snmp.v3.priv_lvl}} {{snmp.v3.priv_key}}" 
+      - "snmp-server community {{ hostvars[inventory_hostname].community }} RO"
+      - "snmp-server host {{nms_ip}} version 2c { hostvars[inventory_hostname].community }}"
+  when: "hostvars[inventory_hostname].snmp == true"

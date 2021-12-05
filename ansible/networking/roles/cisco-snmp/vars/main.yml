@@ -1,12 +1,1 @@
-#snmp:
-#  server_ip: '10.10.110.10'
-#  v3:
-#    group: 'SNMP-GROUP'
-#    user: 'NMS-USER'
-#    auth: 'sha'
-#    auth_key: 'secretkey'
-#    priv: 'aes'
-#    priv_lvl: '128'
-#    priv_key: 'secretkey'
-#  v2c:
-#    community: 'secretkey'
+nms_ip: 10.0.20.6
