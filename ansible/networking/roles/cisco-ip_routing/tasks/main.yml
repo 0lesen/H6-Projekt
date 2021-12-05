@@ -1,5 +1,0 @@
----    
-- name: Enable ip routing
-  ios_config:
-    lines: ip routing
-  when: ip_routing

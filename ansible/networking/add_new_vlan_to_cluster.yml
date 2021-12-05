@@ -1,8 +1,8 @@
 ---    
 - hosts: localhost
-
   vars_files:
     - ./vars/new_dc_vlan.yml
 
+
   roles:
-      - test-add-new-vlan-to-netbox
+      - add-new-vlan-to-cluster

@@ -5,7 +5,7 @@
   gather_facts: true
 
   roles:
-    - test-get-netbox-data
+    - get-netbox-data
     - cisco-git-backup
-    - test-cisco-l3-interfaces
+    - cisco-l3-interfaces
     - cisco-git-backup

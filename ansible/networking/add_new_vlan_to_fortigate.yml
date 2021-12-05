@@ -9,4 +9,4 @@
     - ./vars/new_dc_vlan.yml
 
   roles:
-    - test-fortigate-add-vlan
+    - fortigate-add-vlan

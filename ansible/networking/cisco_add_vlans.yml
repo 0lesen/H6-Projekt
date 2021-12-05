@@ -7,7 +7,7 @@
 
   roles:
     - cisco-git-backup
-    - test-get-netbox-data
-    - test-cisco-vlans
-    - test-cisco-l2-interfaces
+    - get-netbox-data
+    - cisco-vlans
+    - cisco-l2-interfaces
     - cisco-git-backup

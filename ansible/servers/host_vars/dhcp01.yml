@@ -1,7 +1,0 @@
-ansible_host: 10.10.110.6
-ansible_hostname: DHCP01
-
-snmp:
-  community: sadbnhbhjd
-  location: AARHUS_TECH-RACK1
-  extend: [DHCP]
