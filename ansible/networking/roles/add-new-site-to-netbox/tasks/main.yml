@@ -1,6 +1,6 @@
 ---    
-- name: "Run local python script: create_new-site_documentation.py"
-  script: './roles/test-add-new-site-to-netbox/files/create_new-site_documentation.py -name {{ new_site_name } -id {{ new_site_id }} -core_id {{ core_id }} -if_id {{ interface_id }}'
+- name: "Run local python script create_new-site_documentation.py"
+  script: './roles/add-new-site-to-netbox/files/create_new-site_documentation.py -town {{ new_site_name }} -id {{ new_site_id }} -core_id {{ core_id }} -if_id {{ interface_id }}'
   args:
     executable: /usr/bin/python3
   delegate_to: localhost

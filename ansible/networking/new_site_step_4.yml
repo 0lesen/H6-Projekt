@@ -1,0 +1,25 @@
+---
+- hosts:
+    - "sites_{{ new_site_name }}_s{{ new_site_id}}" 
+
+  vars_files:
+    - "./vars/new_site.yml"
+
+  gather_facts: no
+  vars:
+      site_name: "{{ new_site_name }}_s{{ new_site_id }}" 
+
+  roles:
+    - get-netbox-data
+    - cisco-git-backup
+    - cisco-hostname
+    - cisco-timezone
+    - cisco-vlans
+    - cisco-l2-interfaces
+    - cisco-sw-l3-interfaces
+
+  tasks: 
+    - name: Print message to user 
+      debug:
+        msg: "For DHCP on new site, please run the dhcp01.yml playbook under ../servers/dhcp01.yml" 
+      run_once: true

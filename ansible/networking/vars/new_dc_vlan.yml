@@ -1,5 +1,5 @@
-new_vlan_name: "MBOMBO1"
-new_vlan_id: 61
-new_vlan_subnet: "10.0.61.0"
-new_vlan_gateway: "10.0.61.1"
+new_vlan_name: "MBOMBO2"
+new_vlan_id: 62
+new_vlan_subnet: "10.0.62.0"
+new_vlan_gateway: "10.0.62.1"
 new_vlan_prefix: 24

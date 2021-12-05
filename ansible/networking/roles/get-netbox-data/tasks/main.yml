@@ -1,5 +1,5 @@
 ---    
-- name: "Get interfaces on host: {{inventory_hostname}}" 
+- name: "Get interfaces on host" 
   uri:
     url: "https://netbox01.netupnu.dk/api/dcim/interfaces/?device={{inventory_hostname}}"
     headers: "{{ netbox_headers }}"
@@ -10,7 +10,7 @@
   register: interfaces
   delegate_to: localhost
 
-- name: "Get IP address on host: {{inventory_hostname}}" 
+- name: "Get IP address on host" 
   uri:
     url: "https://netbox01.netupnu.dk/api/ipam/ip-addresses/?device={{inventory_hostname}}"
     headers: "{{ netbox_headers }}"
@@ -22,7 +22,7 @@
   delegate_to: localhost
 
 
-- name: "Get vlans in group {{site_name}}-vlans" 
+- name: "Get vlans in group" 
   uri:
     url: "https://netbox01.netupnu.dk/api/ipam/vlans/?group={{site_name}}-vlans"
     headers: "{{ netbox_headers }}"
@@ -33,15 +33,3 @@
   register: vlans
   delegate_to: localhost
   when: "site_name is defined"
-
-  #- name: "Get vlans in group {{dc_vlans_group}}" 
-  #  uri:
-  #    url: "https://netbox01.netupnu.dk/api/ipam/vlans/?group={{dc_vlans_group}}"
-  #    headers: "{{ netbox_headers }}"
-  #    status_code: 200
-  #    validate_certs: no
-  #    force: yes
-  #    method: GET
-  #  register: vlans
-  #  delegate_to: localhost
-

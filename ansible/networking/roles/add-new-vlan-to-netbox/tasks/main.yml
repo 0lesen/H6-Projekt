@@ -1,6 +1,6 @@
 ---    
 - name: "Run local python script: create_new_vlan_documentation.py"
-  script: './roles/test-add-new-vlan-to-netbox/files/create_new_vlan_documentation.py -name {{ new_vlan_name }} -id {{ new_vlan_id }} -subnet {{ new_vlan_subnet }} -prefix {{ new_vlan_prefix }}'
+  script: './roles/add-new-vlan-to-netbox/files/create_new_vlan_documentation.py -name {{ new_vlan_name }} -id {{ new_vlan_id }} -subnet {{ new_vlan_subnet }} -prefix {{ new_vlan_prefix }}'
   args:
     executable: /usr/bin/python3
   delegate_to: localhost

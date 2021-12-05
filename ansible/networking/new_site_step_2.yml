@@ -1,11 +1,18 @@
-### Denne playbook har til formål at konfigurer core routeren
 ---
-- hosts:
-    - device_roles_core_router 
-  gather_facts: true
+- hosts: 
+  #- device_roles_site_switch # Uncomment for creating base config for all site switches
+    - "sites_{{ new_site_name }}_s{{ new_site_id}}" 
+  gather_facts: no
+
+  vars_files:
+    - "./vars/new_site.yml"
 
   roles:
     - get-netbox-data
-    - cisco-git-backup
-    - cisco-l3-interfaces
-    - cisco-git-backup
+
+  tasks:
+    - name: Generating configuration template with data from Netbox
+      template:
+        src: ./sites-basic-config/base_sw_config_tempalte.j2
+        dest: "./sites-basic-config/{{ inventory_hostname }}.cfg"
+      delegate_to: localhost

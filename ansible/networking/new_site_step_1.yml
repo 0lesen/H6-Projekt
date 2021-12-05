@@ -1,7 +1,6 @@
 ---    
-### Denne playbook har 2 formål. 1: Opret dokumentation - 2: opret base konfigraution til ny site switch.
+### Denne playbook har til formål at opret dokumentation for nyt site
 ### playbooken køre rollen "add-new-site-to-netbox" som kører et python3 script lokalt, hvor den opretter nyt site i Netbox baseret på variable værdierne i under ./vars/new_site.yml - ændre disse inden playbooken køres!
-### 
 
 - hosts: localhost
   vars_files:
@@ -9,6 +8,3 @@
 
   roles:
     - add-new-site-to-netbox
-  
-- name: Generating base configuration files for new sites
-  import_playbook: generate_base_config_for_site_switches.yml

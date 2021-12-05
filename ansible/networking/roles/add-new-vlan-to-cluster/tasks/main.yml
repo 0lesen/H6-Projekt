@@ -1,6 +1,6 @@
 ---    
 - name: "Run local pwsh script: create_portgroups_from_netbox.ps1"
-  shell: "./roles/test-add-new-vlan-to-cluster/files/create_new_portgroup.ps1 -type {{type}} -ip {{cluster}} -user {{username}} -password {{password}}" 
+  shell: "./roles/add-new-vlan-to-cluster/files/create_new_portgroup.ps1 -type {{type}} -ip {{cluster}} -user {{username}} -password {{password}}" 
   args:
     executable: /usr/bin/pwsh
   delegate_to: localhost
