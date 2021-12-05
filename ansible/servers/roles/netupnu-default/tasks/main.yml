@@ -41,7 +41,6 @@
 
 
 ### SNMP install
-
 - name: Install SNMPD
   apt: pkg=snmpd state=present
 
@@ -52,48 +51,8 @@
     mode: +x 
 
 - name: Create /etc/snmp/snmpd.conf from template with community and location as variables
-  debug:                                                                     
-    msg: "{{custom_fields}}" 
- 
-
-- name: Create /etc/snmp/snmpd.conf from template with community and location as variables
   template:                                                                     
     src: ./roles/netupnu-default/files/snmpd.conf                            
     dest: /etc/snmp/
   notify: restart snmpd
-  when: 'custom_fields.snmp is defined and custom_fields.community is defined'
-
-
-### APPLICATIONS START ###
-# BIND DNS STATS
-- name: Download LibreNMS BIND script file from github
-  become: true
-  get_url:
-    url: https://github.com/librenms/librenms-agent/raw/master/snmp/bind 
-    dest: /etc/snmp/bind 
-    mode: +x
-  when: 'custom_fields.enable-snmp is true and custom_fields.apps is defined and "BIND" in custom_fields.apps'
-
-- name: Add BIND extend to snmpd.conf if host is a BIND server 
-  lineinfile:
-    path: /etc/snmp/snmpd.conf
-    line: "extend bind /etc/snmp/bind"
-  when: 'custom_fields.enable-snmp is defined and custom_fields.apps is defined and "BIND" in custom_fields.apps'
-  notify: restart snmpd
-  become: true 
-
-# DHCP STATS
-- name: Download LibreNMS DHCP-SERVER file from github to be able to gather DHCP info with snmp 
-  get_url:
-    url: https://github.com/librenms/librenms-agent/raw/master/snmp/dhcp.py
-    dest: /etc/snmp/dhcp.py
-    mode: +x 
-  notify: restart snmpd
-  when: 'custom_fields.enable-snmp is true and custom_fields.apps is defined and "DHCP" in custom_fields.apps'
-
-- name: Create /etc/snmp/dhcp.json file
-  copy:                                                                     
-    src: roles/snmp/files/dhcp.json                            
-    dest: /etc/snmp/dhcp.json
-  notify: restart snmpd
-  when: 'custom_fields.enable-snmp is true and custom_fields.apps is defined and "DHCP" in custom_fields.apps'
+  when: 'custom_fields.snmp == true'
