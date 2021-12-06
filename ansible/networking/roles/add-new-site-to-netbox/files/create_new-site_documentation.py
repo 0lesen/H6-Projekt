@@ -3,7 +3,7 @@ import pynetbox
 import argparse
 
 # Parser
-parser = argparse.ArgumentParser(description='Opret nyt DC vlan i netbox')
+parser = argparse.ArgumentParser(description='Opret nyt site i Netbox')
 
 # Argumenter
 parser.add_argument('-town', action='store', type=str, required=True, help='Site by (AAR): ')
