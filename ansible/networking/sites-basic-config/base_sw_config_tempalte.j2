@@ -16,7 +16,7 @@ exit
 {% for ip_address in ip_addresses.json.results %}
 {% for interface in interfaces.json.results %}
 {% if interface.type.value == "virtual" and ip_address.assigned_object_id == interface.id %}
-vlan 1099
+vlan {{ interface.name | regex_replace('[a-zA-Z]*', '') }}
 name {{ inventory_hostname }}-MGMT1
 exit
 interface vlan {{ interface.name | regex_replace('[a-zA-Z]*', '') }}
