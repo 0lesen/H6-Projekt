@@ -1,0 +1,7 @@
+---
+- name: Ubuntu default playbook
+  hosts: platforms_ubuntu
+  become: true
+
+  roles:
+    - netupnu-default

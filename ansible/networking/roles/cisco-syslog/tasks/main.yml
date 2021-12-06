@@ -2,5 +2,5 @@
 - name: Configure remote syslog
   ios_config:
     lines:
-      - "logging {{syslog.server_ip}}"
+      - "logging host {{syslog.server_ip}}"
 #      - "logging source-interface vlan{{syslog.source_if}}"

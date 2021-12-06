@@ -64,7 +64,7 @@ create_new_site = nb.dcim.sites.create({
 print ("Opretter vlan gruppe: {}-VLANS".format(new_site_full_name))
 create_new_vlan_group = nb.ipam.vlan_groups.create({
     "name": "{}-VLANS".format(new_site_full_name),
-    "slug": "{}_vlans".format(new_site_full_name.lower()),
+    "slug": "{}_vlans".format(new_site_full_name_slug.lower()),
     "scope_type": "dcim.site",
     "scope_id": "{}".format(create_new_site.id)
 })

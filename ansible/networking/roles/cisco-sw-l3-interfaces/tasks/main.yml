@@ -12,7 +12,7 @@
 - name: Configure default gateway
   ios_config:
     lines: 
-      - "ip ip default-gateway {{ item.1.address | ipaddr('net') | ipaddr('1') | regex_replace('[/][^/]*$', '') }}"
+      - "ip default-gateway {% set netnetnet = item.1.address | ipaddr('network') %}{% set netnet = netnetnet + '/' ~ item.1.address | ipaddr('prefix') %}{{ netnet | ipaddr('net') | ipaddr('1') | regex_replace('[/][^/]*$', '') }}"
   with_nested:	
     - "{{ interfaces.json.results }}"	
     - "{{ ip_addresses.json.results }}"	

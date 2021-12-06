@@ -1,7 +1,7 @@
 --- 
-- name: Configure SNMPv3
+- name: Configure SNMP version 2c
   ios_config:
     lines:
       - "snmp-server community {{ hostvars[inventory_hostname].community }} RO"
-      - "snmp-server host {{nms_ip}} version 2c { hostvars[inventory_hostname].community }}"
+      - "snmp-server host {{nms_ip}} version 2c {{ hostvars[inventory_hostname].community }}"
   when: "hostvars[inventory_hostname].snmp == true"

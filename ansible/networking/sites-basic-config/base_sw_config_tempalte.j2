@@ -2,10 +2,10 @@ configure terminal
 vtp mode transparent
 service password-encryption
 hostname {{ inventory_hostname }}
-username ansible privilege 15 password 0 Datait2021!
+username admin privilege 15 password 0 Datait2021!
 no ip domain-lookup
 ip domain-name netupnu.dk
-crypto key generate rsa modulus 512
+crypto key generate rsa modulus 1024
 ip ssh version 2
 line vty 0 4
 privilege level 15

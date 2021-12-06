@@ -3,8 +3,12 @@
   service: name=snmpd state=restarted
   become: true
 
-- name: restart timezone 
-  service: name=snmpd state=restarted
+- name: restart rsyslog 
+  service: name=rsyslog state=restarted
+  become: true
+
+- name: restart multipath 
+  service: name=multipathd state=restarted
   become: true
 
 - name: update timezone

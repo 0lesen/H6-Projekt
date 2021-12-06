@@ -54,5 +54,26 @@
   template:                                                                     
     src: ./roles/netupnu-default/files/snmpd.conf                            
     dest: /etc/snmp/
-  notify: restart snmpd
   when: 'custom_fields.snmp == true'
+  notify: restart snmpd
+
+### rsyslog client install
+- name: Install Rsyslog
+  apt: pkg=rsyslog state=present
+  when: "'nms' not in inventory_hostname"
+
+- name: Add line to rsyslog.conf file
+  become: true
+  lineinfile:
+    dest: /etc/rsyslog.conf
+    state: present
+    line: 'auth,authpriv.* @{{nms_ip}}'
+  notify: restart rsyslog
+  when: "'nms' not in inventory_hostname" 
+
+### Fix multipath error on ubuntu hosts
+- name: Fix multipath
+  copy:                                                                     
+    src: ./roles/netupnu-default/files/multipath.conf                            
+    dest: /etc/multipath.conf
+  notify: restart multipath
