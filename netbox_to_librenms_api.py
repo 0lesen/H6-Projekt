@@ -56,28 +56,9 @@ def add_devices_to_nms(add_devices_list):
         try:
             send_data = requests.post(url = api_librenms_url, data = data, headers=headers )
             print (send_data.content)
-            send_data.raise_for_status()
-        ### Catch and handle some erro's
-        except requests.exceptions.HTTPError as err:
+            #send_data.raise_for_status()
+        except Exception as err:
             print (err)
-        #except requests.exceptions.HTTPError as err:
-        #    if send_data.status_code == 422:
-        #        print ("Device: %s - Already there" % device["ip"])
-        #    elif send_data.status_code == 401:
-        #        print ("Error: Unauthorized (401) - fix please: ", err)
-        #        raise SystemExit(err)
-        #    elif send_data.status_code == 500:
-        #        print ("Cant access host: %s" % device["ip"])
-        #    else:
-        #        print ("ERRO, stopping program because of error: ", err)
-        #        raise SystemExit(err)
-        #except requests.exceptions.RequestException as err:
-        #    print ("Error: Something wrong: ",err)
-        #except requests.exceptions.ConnectionError as errc:
-        #    print ("Error Connecting: ",errc)
-        #except requests.exceptions.Timeout as errt:
-        #    print ("Timeout Error: ",errt)
-
 
 
 get_devices_information()
