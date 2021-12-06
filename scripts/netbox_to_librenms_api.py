@@ -13,7 +13,7 @@ nb = pynetbox.api( 'https://netbox01.netupnu.dk', token='bbbf9087d591f7651da4b8f
 nb.http_session.verify = False
 urllib3.disable_warnings()
 # LibreNMS information
-api_librenms_url = 'http://10.0.20.6/api/v0/devices'
+api_librenms_url = 'http://nms01.netupnu.dk/api/v0/devices'
 headers = {'X-Auth-Token': 'ddfe52cc2bfbdef20ac402f0e4cb863a'}
 
 devices_list = []
