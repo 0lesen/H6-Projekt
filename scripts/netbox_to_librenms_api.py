@@ -1,10 +1,10 @@
+#!/usr/bin/env python3.8
 import pynetbox
 import urllib3
 import ipaddress
 import json
 import requests
 import os
-
 
 
 
