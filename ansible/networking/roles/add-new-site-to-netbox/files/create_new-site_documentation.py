@@ -25,7 +25,7 @@ new_site_id_input = str(args.id)
 core_id = str(args.core_id)
 core_interface_id = str(args.if_id)
 new_site_full_name = str(new_site_name_input).upper() + "-S" + str(new_site_id_input)
-new_site_full_name_slug = str(new_site_name_input).upper() + "_S" + str(new_site_id_input)
+new_site_full_name_slug = str(new_site_name_input).upper() + "_s" + str(new_site_id_input)
 
 ### Statiske variabler
 dhcp_relay_tag = "DHCP-RELAY"
@@ -64,7 +64,7 @@ create_new_site = nb.dcim.sites.create({
 print ("Opretter vlan gruppe: {}-VLANS".format(new_site_full_name))
 create_new_vlan_group = nb.ipam.vlan_groups.create({
     "name": "{}-VLANS".format(new_site_full_name),
-    "slug": "{}_vlans".format(new_site_full_name_slug.lower()),
+    "slug": "{}-vlans".format(new_site_full_name_slug.lower()),
     "scope_type": "dcim.site",
     "scope_id": "{}".format(create_new_site.id)
 })
