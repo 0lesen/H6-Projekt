@@ -32,4 +32,5 @@ ip default-gateway {{ netnet | ipaddr('net') |ipaddr('1') | regex_replace('[/][^
 {% endif %}
 {% endfor %}
 {% endfor %}
+exit
 copy running-config startup-config
