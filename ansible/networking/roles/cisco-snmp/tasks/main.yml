@@ -4,4 +4,5 @@
     lines:
       - "snmp-server community {{ hostvars[inventory_hostname].community }} RO"
       - "snmp-server host {{nms_ip}} version 2c {{ hostvars[inventory_hostname].community }}"
+      - "snmp ifmib ifindex persist"
   when: "hostvars[inventory_hostname].snmp == true"
