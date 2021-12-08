@@ -8,7 +8,7 @@
   import_playbook: add_new_vlan_to_cluster.yml 
 
 - name: Create vlan on cluster switches
-  import_playbook: cisco_add_vlans.yml
+  import_playbook: add_new_vlan_to_cluster_switche.yml
 
 - name: Create new vlan on firewall 
   import_playbook: add_new_vlan_to_fortigate.yml 
