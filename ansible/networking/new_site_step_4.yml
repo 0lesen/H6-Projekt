@@ -19,6 +19,7 @@
     - cisco-vlans
     - cisco-l2-interfaces
     - cisco-sw-l3-interfaces
+    - cisco-git-backup
 
   tasks: 
     - name: Print message to user 
