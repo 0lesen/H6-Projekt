@@ -9,10 +9,7 @@ group_by:
   - sites
   - platforms
 
-#query_filters:
-#  - tag: 'site'
-
-# Get devices with primary ip
+# Get only devices with an IP-address
 device_query_filters:
   - has_primary_ip: 'true'
 
