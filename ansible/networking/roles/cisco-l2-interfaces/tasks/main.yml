@@ -8,7 +8,9 @@
       - "spanning-tree bpduguard enable"
     parents: "interface {{ item.name }}"
   with_items: "{{ interfaces.json.results }}"
-  when: 'item.mode and item.mode.value == "access" and item.untagged_vlan != "null"'
+  loop_control:
+    label: "Interface: {{ item.name }}"
+  when: 'item.mode and item.mode.value == "access" and item.untagged_vlan != "None"'
 
 - name: Configure vlans on TRUNK interfaces
   ios_config:
@@ -20,4 +22,6 @@
     - "{{ interfaces.json.results }}"	
     - "tagged_vlans"	
     - skip_missing: True
-  when: 'item.0.mode and item.0.mode.value == "tagged"' # and item.0.tagged_vlans != "null"'
+  loop_control:
+    label: "Interface: {{ item.0.name }} - VLAN ID: {{ item.1.vid }}"
+  when: 'item.0.mode and item.0.mode.value == "tagged"'

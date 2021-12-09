@@ -6,7 +6,8 @@
     parents: "interface {{ item.name }}"
   with_items: "{{ interfaces.json.results }}"
   when: 'item.enabled'
-  changed_when: False
+  loop_control:
+    label: "Interface {{ item.name }}"
 
 - name: Configure encapsulation on interfaces
   ios_config:
@@ -14,6 +15,8 @@
       - "encapsulation dot1Q {{ item.name | regex_replace('^([^.]*).', '') }}"
     parents: "interface {{ item.name }}"
   with_items: "{{ interfaces.json.results }}"
+  loop_control:
+    label: "Interface {{ item.name }}"
   when: 'item.enabled and item.type.value == "virtual"'
 
 
@@ -25,6 +28,8 @@
   with_nested:	
     - "{{ interfaces.json.results }}"	
     - "{{ ip_addresses.json.results }}"	
+  loop_control:
+    label: "Interface {{ item.0.name }} - IP address {{ item.1.address }} "
   when: 'item.0.enabled and item.0.type.value == "virtual" and item.0.id == item.1.assigned_object_id'
  
 
@@ -34,6 +39,8 @@
       - "ip helper-address 10.0.20.4"
     parents: "interface {{ item.name }}"
   with_items: "{{ interfaces.json.results }}"
+  loop_control:
+    label: "Interface {{ item.name }}"
   when: 'item.enabled and item.type.value == "virtual"'
 
 - name: "Add sub interfaces to ospf process id 1 and area 0"
@@ -42,4 +49,6 @@
       - "ip ospf 1 area 0"
     parents: "interface {{ item.name }}"
   with_items: "{{ interfaces.json.results }}"
+  loop_control:
+    label: "Interface {{ item.name }}"
   when: 'item.enabled and item.type.value == "virtual"'

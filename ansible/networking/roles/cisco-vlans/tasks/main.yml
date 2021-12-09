@@ -4,6 +4,8 @@
     lines:
       - "vlan {{ item.vid }}"
   with_items: "{{ vlans.json.results }}"
+  loop_control:
+    label: "Vlan ID: {{ item.vid }}"
   when: 'vlans is defined and vlans and item.status.value == "active"'
 
 - name: Configure VLAN Name
@@ -12,4 +14,6 @@
       - "name {{ item.name }}"
     parents: "vlan {{ item.vid}}"
   with_items: "{{ vlans.json.results }}"
+  loop_control:
+    label: "Vlan name: {{ item.name }} - Vlan ID: {{ item.vid }}"
   when: 'vlans is defined and vlans and item.status.value == "active"'

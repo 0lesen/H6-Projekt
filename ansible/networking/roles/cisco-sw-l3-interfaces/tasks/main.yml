@@ -7,6 +7,8 @@
   with_nested:	
     - "{{ interfaces.json.results }}"	
     - "{{ ip_addresses.json.results }}"	
+  loop_control:
+    label: "Interface: {{ item.0.name }} - IP address: {{ item.1.address }}"
   when: 'item.0.enabled and item.0.type.value == "virtual" and item.0.id == item.1.assigned_object_id'
  
 - name: Configure default gateway
@@ -16,4 +18,6 @@
   with_nested:	
     - "{{ interfaces.json.results }}"	
     - "{{ ip_addresses.json.results }}"	
+  loop_control:
+    label: "Interface: {{ item.0.name }} - IP address: {{ item.1.address }}"
   when: 'item.0.enabled and item.0.type.value == "virtual" and item.0.id == item.1.assigned_object_id'
